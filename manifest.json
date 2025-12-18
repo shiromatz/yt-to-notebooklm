@@ -1,0 +1,30 @@
+{
+    "manifest_version": 3,
+    "name": "URL to NotebookLM",
+    "version": "0.2.0",
+    "action": {
+        "default_title": "Send current URL to NotebookLM",
+        "default_popup": "popup.html"
+    },
+    "background": {
+        "service_worker": "service_worker.js"
+    },
+    "permissions": [
+        "tabs",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://notebooklm.google.com/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://notebooklm.google.com/*"
+            ],
+            "js": [
+                "notebooklm_content.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ]
+}

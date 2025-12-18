@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font: 13px system-ui, sans-serif;
+            margin: 12px;
+            width: 340px;
+        }
+
+        .row {
+            margin: 8px 0;
+        }
+
+        .tabs {
+            max-height: 220px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        label {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            padding: 6px 0;
+        }
+
+        .title {
+            font-weight: 600;
+        }
+
+        .url {
+            color: #555;
+            font-size: 12px;
+            word-break: break-all;
+        }
+
+        button {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .hint {
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row title">Send current tab URL to NotebookLM</div>
+    <div class="row hint">Choose a NotebookLM tab:</div>
+
+    <div id="tabs" class="tabs"></div>
+
+    <div class="row" style="display:flex; gap:8px;">
+        <button id="send" disabled>Send</button>
+        <button id="open">Open NotebookLM</button>
+    </div>
+
+    <div id="status" class="row hint"></div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
