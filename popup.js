@@ -71,7 +71,7 @@ async function main() {
         });
 
         document.getElementById("status").textContent =
-            res?.ok ? `Done (${res.mode})` : `Failed (${res?.mode || "unknown"})`;
+            res?.ok ? `Done (${res.mode})` : `Failed (${res?.detail || res?.mode || "unknown"})`;
 
         // すぐ閉じたいなら次行を有効化
         // window.close();
