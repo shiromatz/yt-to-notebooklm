@@ -216,15 +216,17 @@
         }
 
         // --- STEP 6: Verification ---
-        await sleep(1000);
-        const dialogOpen = document.querySelector("mat-dialog-container");
-        if (!dialogOpen) {
-            return { ok: true, mode: "auto" };
-        }
-
-        const toastText = norm(document.body.innerText);
-        if (toastText.includes("added to notebook") || toastText.includes("ソースを追加しました")) {
-            return { ok: true, mode: "auto" };
+        // OPTIMIZED: Polling instead of fixed sleep
+        for (let i = 0; i < 20; i++) { // Max 2s polling
+            await sleep(100);
+            const dialogOpen = document.querySelector("mat-dialog-container");
+            if (!dialogOpen) {
+                return { ok: true, mode: "auto" };
+            }
+            const toastText = norm(document.body.innerText);
+            if (toastText.includes("added to notebook") || toastText.includes("ソースを追加しました")) {
+                return { ok: true, mode: "auto" };
+            }
         }
 
         return { ok: false, mode: "failed", detail: "Step6: Dialog did not close" };

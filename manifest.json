@@ -11,7 +11,8 @@
     },
     "permissions": [
         "tabs",
-        "scripting"
+        "scripting",
+        "activeTab"
     ],
     "host_permissions": [
         "https://notebooklm.google.com/*"
