@@ -33,10 +33,9 @@ async function extractPlaylistUrls(tabId) {
         func: () => {
             // Select regular videos (playlist) and grid videos (channel/feed)
             const selectors = [
-                "ytd-playlist-video-renderer a#video-title", // Playlist
-                "ytd-rich-item-renderer a#video-title-link", // Channel Grid
-                "ytd-grid-video-renderer a#video-title",     // Old Grid
-                "ytd-video-renderer a#video-title"           // Search Results
+                "a#video-title",
+                "a#video-title-link",
+                "a.yt-lockup-metadata-view-model__title"
             ];
             const candidates = Array.from(document.querySelectorAll(selectors.join(",")));
             return candidates.map(a => {

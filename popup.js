@@ -60,21 +60,26 @@ async function sendAction() {
         active.url.includes("playlist") ||
         active.url.includes("/videos") ||
         active.url.includes("/feed/") ||
-        active.url.includes("/results");
+        active.url.includes("/results") ||
+        active.url.includes("/hashtag/");
+
+    // Specific check for YouTube Home (batch import from recommendations)
+    const isHome = active.url === "https://www.youtube.com/" || active.url.startsWith("https://www.youtube.com/?");
+    const isBatch = isPlaylist || isHome;
 
     const statusEl = document.getElementById("status");
-    statusEl.textContent = isPlaylist
-        ? "Extracting Playlist..."
+    statusEl.textContent = isBatch
+        ? "Extracting List..."
         : "Sending...";
 
     const res = await chrome.runtime.sendMessage({
-        type: isPlaylist ? "PROCESS_PLAYLIST" : "SEND_URL_TO_NOTEBOOKLM",
+        type: isBatch ? "PROCESS_PLAYLIST" : "SEND_URL_TO_NOTEBOOKLM",
         url: active.url,
         targetTabId: targetId,
         sourceTabId: active.id
     });
 
-    if (isPlaylist && res?.ok) {
+    if (isBatch && res?.ok) {
         statusEl.textContent = "Processing Playlist (See Badge)";
         // window.close() would be nice here for playlist too, but let's keep it open or close per preference.
         // Given "Auto Send", usually implies "Set and Forget".
