@@ -82,7 +82,6 @@
     }
 
     async function tryAutoAdd(url) {
-        console.log("[NBLM-Ext] Starting Auto Add...");
 
         // --- STEP 1: Open Dialog ---
         let addBtn = document.querySelector("button[aria-label='Add source'], button[aria-label='ソースを追加']");
@@ -92,7 +91,6 @@
         }
 
         if (addBtn) {
-            console.log("[NBLM-Ext] Clicking Add Source Button");
             await click(addBtn);
         } else {
             // Check if dialog is already open
@@ -113,8 +111,6 @@
         await sleep(500); // Wait for initial animation
 
         // --- STEP 2: Select YouTube (Conditional with Retry) ---
-        console.log("[NBLM-Ext] Looking for YouTube option or Input screen...");
-
         let youtubeBtn = null;
         let input = null;
 
@@ -123,7 +119,6 @@
             // Check Input first
             input = findInput(dialog);
             if (input) {
-                console.log("[NBLM-Ext] Input found! Skipping navigation.");
                 break;
             }
 
@@ -137,7 +132,6 @@
             }
 
             if (youtubeBtn) {
-                console.log("[NBLM-Ext] YouTube option found.");
                 break;
             }
 
@@ -149,7 +143,6 @@
         if (input) {
             // Proceed to input
         } else if (youtubeBtn) {
-            console.log("[NBLM-Ext] Clicking YouTube Chip");
             await click(youtubeBtn);
         } else {
             return { ok: false, mode: "failed", detail: "Step2: YouTube Option Not Found" };
@@ -167,7 +160,6 @@
         if (!input) {
             // One last-ditch retry of clicking YouTube if visible
             if (youtubeBtn && isVisible(youtubeBtn)) {
-                console.log("[NBLM-Ext] Retrying click...");
                 await click(youtubeBtn);
                 await sleep(500);
                 input = findInput(document);
@@ -177,7 +169,6 @@
         if (!input) return { ok: false, mode: "failed", detail: "Step3: Input Field Not Found" };
 
         // --- STEP 4: Input URL ---
-        console.log("[NBLM-Ext] Inputting URL...");
         input.focus();
         await sleep(50);
 
@@ -206,7 +197,6 @@
         }
 
         if (confirmBtn) {
-            console.log("[NBLM-Ext] Clicking Confirm");
             await click(confirmBtn);
         } else {
             // Fallback: Enter key on input

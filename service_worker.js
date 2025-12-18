@@ -51,7 +51,6 @@ async function handleDashboardRedirect(tabId) {
     const tab = await chrome.tabs.get(tabId);
     // Dashboard URLs usually don't have /notebook/UUID
     if (!tab.url.includes("/notebook/")) {
-        console.log("Checking dashboard:", tab.url);
 
         // Attempt to create new notebook via scripting
         // We need to WAIT for the button because of "Loading..." spinner.
