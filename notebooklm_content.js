@@ -110,6 +110,19 @@
 
         await sleep(500); // Wait for initial animation
 
+        // --- STEP 1.5: Check Source Limit ---
+        const limitEl = Array.from(dialog.querySelectorAll(".postfix")).find(el => el.innerText.includes("/"));
+        if (limitEl) {
+            const parts = limitEl.innerText.split("/");
+            if (parts.length === 2) {
+                const current = parseInt(parts[0].replace(/[^0-9]/g, "").trim());
+                const max = parseInt(parts[1].replace(/[^0-9]/g, "").trim());
+                if (!isNaN(current) && !isNaN(max) && current >= max) {
+                    return { ok: false, mode: "limit_reached", detail: `Limit reached (${current}/${max})` };
+                }
+            }
+        }
+
         // --- STEP 2: Select YouTube (Conditional with Retry) ---
         let youtubeBtn = null;
         let input = null;
@@ -222,12 +235,41 @@
         return { ok: false, mode: "failed", detail: "Step6: Dialog did not close" };
     }
 
+    async function closeDialog() {
+        const dialog = findLastVisibleDialog();
+        if (dialog) {
+            // Try Escape first
+            const opts = { bubbles: true, cancelable: true, view: window, key: "Escape", code: "Escape" };
+            dialog.dispatchEvent(new KeyboardEvent("keydown", opts));
+            dialog.dispatchEvent(new KeyboardEvent("keyup", opts));
+
+            await sleep(200);
+            if (findLastVisibleDialog()) {
+                // Try finding Close button
+                const closeBtn = dialog.querySelector("button[aria-label='Close'], button.close-button");
+                if (closeBtn) await click(closeBtn);
+                else {
+                    // Click backdrop? Angular Material backdrop
+                    const backdrop = document.querySelector(".cdk-overlay-backdrop");
+                    if (backdrop) await click(backdrop);
+                }
+            }
+        }
+        return { ok: true };
+    }
+
     // ---------- Message Listener ----------
     chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         if (msg?.type === "PING") {
             sendResponse({ ok: true });
             return true;
         }
+
+        if (msg?.type === "CLOSE_DIALOG") {
+            closeDialog().then(r => sendResponse(r));
+            return true;
+        }
+
         if (msg?.type !== "ADD_SOURCE_URL") return true;
 
         const url = msg?.url;

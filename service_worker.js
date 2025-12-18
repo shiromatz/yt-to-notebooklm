@@ -31,7 +31,14 @@ async function extractPlaylistUrls(tabId) {
     const results = await chrome.scripting.executeScript({
         target: { tabId },
         func: () => {
-            const candidates = Array.from(document.querySelectorAll("ytd-playlist-video-renderer a#video-title"));
+            // Select regular videos (playlist) and grid videos (channel/feed)
+            const selectors = [
+                "ytd-playlist-video-renderer a#video-title", // Playlist
+                "ytd-rich-item-renderer a#video-title-link", // Channel Grid
+                "ytd-grid-video-renderer a#video-title",     // Old Grid
+                "ytd-video-renderer a#video-title"           // Search Results
+            ];
+            const candidates = Array.from(document.querySelectorAll(selectors.join(",")));
             return candidates.map(a => {
                 const u = new URL(a.href, window.location.origin);
                 const v = u.searchParams.get("v");
@@ -163,6 +170,12 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
 
                     try {
                         const r = await chrome.tabs.sendMessage(targetTabId, { type: "ADD_SOURCE_URL", url });
+
+                        if (r?.mode === "limit_reached") {
+                            badge(sourceTabId, "FULL", "#b00020");
+                            break;
+                        }
+
                         if (!r?.ok) console.error("Failed to add", url, r);
                     } catch (e) {
                         console.error("Exception adding", url, e);
@@ -171,6 +184,12 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
                 }
 
                 badge(sourceTabId, "DONE", "#0a7d26");
+
+                // Ensure dialog is closed at the end
+                try {
+                    await chrome.tabs.sendMessage(targetTabId, { type: "CLOSE_DIALOG" });
+                } catch { }
+
                 setTimeout(() => badge(sourceTabId, "", "#000000"), 5000);
 
             } catch (e) {

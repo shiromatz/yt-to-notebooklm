@@ -56,7 +56,11 @@ async function sendAction() {
         return;
     }
 
-    const isPlaylist = active.url.includes("list=") || active.url.includes("playlist");
+    const isPlaylist = active.url.includes("list=") ||
+        active.url.includes("playlist") ||
+        active.url.includes("/videos") ||
+        active.url.includes("/feed/") ||
+        active.url.includes("/results");
 
     const statusEl = document.getElementById("status");
     statusEl.textContent = isPlaylist
