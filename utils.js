@@ -66,6 +66,13 @@ const Utils = {
 // Expose to global scope
 if (typeof window !== "undefined") {
     window.Utils = Utils;
-} else {
+} else if (typeof self !== "undefined") {
     self.Utils = Utils;
+} else if (typeof global !== "undefined") {
+    global.Utils = Utils;
+}
+
+// Export for Node.js/Test environments
+if (typeof module !== "undefined") {
+    module.exports = { Utils };
 }

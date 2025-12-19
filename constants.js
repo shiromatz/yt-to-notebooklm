@@ -99,3 +99,8 @@ const CONFIG = {
         ]
     }
 };
+
+// Export for Node.js/Test environments
+if (typeof module !== "undefined") {
+    module.exports = { CONFIG };
+}

@@ -1,0 +1,29 @@
+{
+  "name": "yt-to-notebooklm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "automator.js",
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:e2e": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shiromatz/yt-to-notebooklm.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/shiromatz/yt-to-notebooklm/issues"
+  },
+  "homepage": "https://github.com/shiromatz/yt-to-notebooklm#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@vitest/ui": "^4.0.16",
+    "playwright": "^1.57.0",
+    "vitest": "^4.0.16"
+  }
+}

@@ -83,14 +83,22 @@ class BatchProcessor {
             await this.deps.ensureContentScript(targetTabId);
 
             // Loop using helper
+            let stopReason = "done";
             for (let i = 0; i < urls.length; i++) {
                 const url = urls[i];
                 const result = await this.processSingleUrlInBatch(url, i, urls.length, targetTabId, sourceTabId);
 
-                if (!result.ok && result.reason === "limit") break;
+                if (!result.ok && result.reason === "limit") {
+                    stopReason = "limit";
+                    break;
+                }
             }
 
-            this.deps.badge(sourceTabId, "DONE", CONFIG.COLORS.SUCCESS);
+            if (stopReason === "limit") {
+                this.deps.badge(sourceTabId, "LIMIT", CONFIG.COLORS.ERROR);
+            } else {
+                this.deps.badge(sourceTabId, "DONE", CONFIG.COLORS.SUCCESS);
+            }
 
             // Ensure dialog is closed at the end
             try {
@@ -105,3 +113,9 @@ class BatchProcessor {
         }
     }
 }
+
+// Export for Node.js/Test environments
+if (typeof module !== "undefined") {
+    module.exports = { BatchProcessor };
+}
+
