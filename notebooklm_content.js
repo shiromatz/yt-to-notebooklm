@@ -220,19 +220,30 @@
 
         // --- STEP 6: Verification ---
         // OPTIMIZED: Polling instead of fixed sleep
-        for (let i = 0; i < 20; i++) { // Max 2s polling
+        // --- STEP 6: Verification ---
+        // OPTIMIZED: Polling instead of fixed sleep (Extended for slower networks/processing)
+        for (let i = 0; i < 100; i++) { // Max 10s polling (was 2s)
             await sleep(100);
             const dialogOpen = document.querySelector("mat-dialog-container");
             if (!dialogOpen) {
                 return { ok: true, mode: "auto" };
             }
+
+            // Check for success toast
             const toastText = norm(document.body.innerText);
             if (toastText.includes("added to notebook") || toastText.includes("ソースを追加しました")) {
                 return { ok: true, mode: "auto" };
             }
+
+            // Check for potential errors in dialog
+            const errorText = norm(dialogOpen.innerText);
+            if (errorText.includes("invalid url") || errorText.includes("無効なurl") ||
+                errorText.includes("can't add") || errorText.includes("追加できません")) {
+                return { ok: false, mode: "failed", detail: "Step6: Error message in dialog" };
+            }
         }
 
-        return { ok: false, mode: "failed", detail: "Step6: Dialog did not close" };
+        return { ok: false, mode: "failed", detail: "Step6: Dialog did not close (Timeout)" };
     }
 
     async function closeDialog() {
