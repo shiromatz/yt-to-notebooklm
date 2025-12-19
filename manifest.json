@@ -23,6 +23,8 @@
                 "https://notebooklm.google.com/*"
             ],
             "js": [
+                "constants.js",
+                "utils.js",
                 "notebooklm_content.js"
             ],
             "run_at": "document_idle"
