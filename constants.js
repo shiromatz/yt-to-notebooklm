@@ -87,5 +87,15 @@ const CONFIG = {
             "invalid url", "無効なurl", "can't add", "追加できません", "non valide", "impossible", "inválida", "no se puede", "non valido", "impossibile", "잘못된", "할 수 없음", "无效", "无法", "غير صالح", "تعذر"
         ],
         INPUT_KEYWORDS: ["youtube", "url", "link"]
+    },
+    FILES: {
+        CONTENT_SCRIPTS: [
+            "constants.js",
+            "utils.js",
+            "debug_panel.js",
+            "dom_finder.js",
+            "automator.js",
+            "notebooklm_content.js"
+        ]
     }
 };

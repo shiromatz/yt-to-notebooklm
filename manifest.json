@@ -25,6 +25,9 @@
             "js": [
                 "constants.js",
                 "utils.js",
+                "debug_panel.js",
+                "dom_finder.js",
+                "automator.js",
                 "notebooklm_content.js"
             ],
             "run_at": "document_idle"
